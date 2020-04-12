@@ -3,108 +3,109 @@
 
 package ncurses
 
-import ( 
+import (
 	"fmt"
+	"os"
 )
 
 func Example_goTMDialog() {
-  w,_ := ncurses.Initscr()
-  
-    // Ensure, that ncurses will be properly exited
-  defer ncurses.Endwin()
-  defer func() {
-    if r := recover(); r != nil {
-      ncurses.Endwin()
-      fmt.Printf("panic:\n%s\n", r)
-      os.Exit(-1)
-    }
-  }()
+	w, _ := Initscr()
 
-  // Enable color mode
-  ncurses.StartColor()
+	// Ensure, that ncurses will be properly exited
+	defer Endwin()
+	defer func() {
+		if r := recover(); r != nil {
+			Endwin()
+			fmt.Printf("panic:\n%s\n", r)
+			os.Exit(-1)
+		}
+	}()
 
-  // Define color pairs
-  ncurses.AddColorPair("bw", ncurses.ColorGreen,ncurses.ColorBlack)
-  ncurses.AddColorPair("wb",ncurses.ColorWhite, ncurses.ColorBlue)
+	// Enable color mode
+	StartColor()
 
-  // Set cursor visiblity to hidden
-  ncurses.SetCursor(ncurses.CURSOR_HIDDEN)
+	// Define color pairs
+	AddColorPair("bw", ColorGreen, ColorBlack)
+	AddColorPair("wb", ColorWhite, ColorBlue)
 
-  // Automatically refresh after each command
-  w.AutoRefresh = true
+	// Set cursor visiblity to hidden
+	SetCursor(CURSOR_HIDDEN)
 
-  // Set color for stdscr-window to system defaults.
-  w.Wbkgd("std")
+	// Automatically refresh after each command
+	w.AutoRefresh = true
 
-  // Draw a border around main window (stdscr)
-  w.Box()
+	// Set color for stdscr-window to system defaults.
+	w.Wbkgd("std")
 
-  // Create a new window for greeting-text at cell (x=20,y=5) with a size of 25 x 5 cells.
-  w2,err := ncurses.NewWindow("dialog",ncurses.Position{20,5},ncurses.Size{25,5})
+	// Draw a border around main window (stdscr)
+	w.Box()
 
-  // This can fail if the terminal is too small.
-  if err != nil {
-    panic(err)
-  }
-  w2.AutoRefresh = true
+	// Create a new window for greeting-text at cell (x=20,y=5) with a size of 25 x 5 cells.
+	w2, err := NewWindow("dialog", Position{20, 5}, Size{25, 5})
 
-  // Use color pair wb (2)
-  w2.Wbkgd("wb")
+	// This can fail if the terminal is too small.
+	if err != nil {
+		panic(err)
+	}
+	w2.AutoRefresh = true
 
-  // Draw a border around our "Greeting Window".
-  w2.Box()
+	// Use color pair wb (2)
+	w2.Wbkgd("wb")
 
-  // Move cursor relative to the window borders of w2
-  w2.Move(2,3)
+	// Draw a border around our "Greeting Window".
+	w2.Box()
 
-  // Output our greeting text
-  fmt.Fprintf(w2, "Hello from Go\u2122-Lang!") 
+	// Move cursor relative to the window borders of w2
+	w2.Move(2, 3)
 
-  // Move cursor relative to the beginning of our main window
-  w.Move(17,19)
+	// Output our greeting text
+	fmt.Fprintf(w2, "Hello from Go\u2122-Lang!")
 
-  // Output exit instruction for the user
-  fmt.Fprintf(w," => Press a key to exit <=")
+	// Move cursor relative to the beginning of our main window
+	w.Move(17, 19)
 
-  // Wait for user input (e.g. keypress)
-  w.Getch()
+	// Output exit instruction for the user
+	fmt.Fprintf(w, " => Press a key to exit <=")
+
+	// Wait for user input (e.g. keypress)
+	w.Getch()
 }
 
 func ExampleInitscr_doThis() {
-    fmt.Println("Before: This is okay!");
-    w,_ := Initscr();
+	fmt.Println("Before: This is okay!")
+	w, _ := Initscr()
 
-    // Normally, you could use defer Endwin()
-    fmt.Fprintf(w, "While: This is also okay!")
-    
-    Endwin()
-    fmt.Printf("After: This is also okay!")
-    // do some things
+	// Normally, you could use defer Endwin()
+	fmt.Fprintf(w, "While: This is also okay!")
+
+	Endwin()
+	fmt.Printf("After: This is also okay!")
+	// do some things
 }
 
 func ExampleInitscr_dontDoThis() {
-	    w,_ := Initscr();
-	    // Make sure, to call Endwin() before exiting
-    	defer Endwin()
-		fmt.Println("Don't do this after you've called ncurses.InitScr()")
-		// do some things
+	Initscr()
+	// Make sure, to call Endwin() before exiting
+	defer Endwin()
+	fmt.Println("Don't do this after you've called ncurses.InitScr()")
+	// do some things
 }
 
 func ExampleAddColorPair() {
-	w,_ := Initscr()
+	w, _ := Initscr()
 	defer Endwin()
-	AddColorPair("mypair",ColorWhite,ColorBlue)
+	AddColorPair("mypair", ColorWhite, ColorBlue)
 	SetColor("mypair")
 	fmt.Fprintf(w, "Hello in White and Blue")
 	// Output: Hello in White and Blue
 }
 
 func ExampleNewWindow() {
-	w,_ := Initscr()
+	Initscr()
 	defer Endwin()
-	w2,err := NewWindow("MyWindow",Position{4,4},Size{20,4})
+	w2, err := NewWindow("MyWindow", Position{4, 4}, Size{20, 4})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Fprintf(w2,"Hello from MyWindow")
+	fmt.Fprintf(w2, "Hello from MyWindow")
 }

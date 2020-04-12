@@ -39,6 +39,10 @@ void bind_color_set(short pair) {
     color_set(pair,0);
 }
 
+void bind_wcolor_set(WINDOW *win, short pair) {
+    wcolor_set(win, pair,0);
+}
+
 void bind_wbkgd(WINDOW *win, short pairId) {
     wbkgd(win,COLOR_PAIR(pairId));
 }

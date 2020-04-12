@@ -9,4 +9,5 @@ void bind_waddstr(WINDOW* win, char *str);
 void* bind_get_stdscr();
 void bind_set_locale();
 void bind_color_set(short pair);
+void bind_wcolor_set(WINDOW *win, short pair);
 void bind_wbkgd(WINDOW *win, short pairId);
